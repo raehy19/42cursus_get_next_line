@@ -10,4 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+void	*ft_memmove(void *dst, const void *src, int len)
+{
+	int	i;
 
+	if (dst > src)
+	{
+		i = len;
+		while (--i > -1)
+			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
+	}
+	else
+	{
+		i = -1;
+		while (++i < len)
+			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
+	}
+	return (dst);
+}
