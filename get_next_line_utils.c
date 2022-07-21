@@ -16,26 +16,27 @@ int	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (!s)
+		return (0);
 	i = -1;
 	while (*(s + ++i) != 0);
 	return (i);
 }
 
-char	*ft_join_n_free(char *s1, char *s2)
+char	*ft_join(char *s1, char *s2, int s2_start, int s2_len)
 {
 	char	*dst;
 	int		s1_len;
-	int		s2_len;
 
 	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
 	dst = (char *) malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (!dst)
 		return (NULL);
-	ft_memmove(dst, s1, s1_len);
-	ft_memmove(dst + s1_len, s2, s2_len + 1);
-	free(s1);
-	free(s2);
+	if (s1)
+		ft_memmove(dst, s1, s1_len);
+	if (s2)
+		ft_memmove(dst + s1_len, s2 + s2_start, s2_len);
+	*(dst + s1_len + s2_len) = '\0';
 	return (dst);
 }
 
