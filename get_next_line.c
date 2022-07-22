@@ -32,9 +32,7 @@ char	*get_next_line(int fd)
 		if (i < read_size)
 		{
 			result = ft_join(NULL, temp_left, 0, i);
-			temp = ft_join(NULL, temp_left, i, read_size);
-			free(temp_left);
-			temp_left = temp;
+			temp_left = ft_join_n_free(NULL, temp_left, i, read_size);
 			return (result);
 		}
 		else
