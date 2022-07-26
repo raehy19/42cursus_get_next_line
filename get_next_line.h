@@ -25,9 +25,10 @@ typedef struct s_left
 
 
 char	*get_next_line(int fd);
-void	*ft_memmove(void *dst, const void *src, int len);
 int		ft_strlen(const char *s);
 char	*ft_join(char *s1, char *s2, int s2_start, int s2_len);
 char	*ft_join_n_free(char *s1, char *s2, int s2_start, int s2_len);
+void	*ft_memmove(void *dst, const void *src, int len);
+char	*ft_str_dup_move(char *src, int start, int len);
 
 #endif
