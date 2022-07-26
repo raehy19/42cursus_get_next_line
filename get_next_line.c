@@ -14,34 +14,30 @@
 
 char	*get_next_line(int fd)
 {
-	static char	*temp_left = NULL;
-	char		*temp;
-	char		*temp_read;
-	char		*result;
-	int			read_size;
-	int			i;
+	static t_left	left;
+	char			*temp_read;
+	char			*result;
+	int				read_size;
+	int				i;
 
 	if (fd < 0 || fd > OPEN_MAX)
 		return (NULL);
 	result = NULL;
-	if (temp_left)
+	if (left.size)
 	{
-		read_size = ft_strlen(temp_left);
 		i = -1;
-		while (++i < read_size && *(temp_left+ i) != '\n');
-		if (i < read_size)
+		while (++i < left.size && *(left.str + i) != '\n');
+		if (i < left.size)
 		{
-			result = ft_join(NULL, temp_left, 0, i);
-			temp = ft_join(NULL, temp_left, i, read_size);
-			free(temp_left);
-			temp_left = temp;
+			result = ft_join(NULL, left.str, 0, i);
+			left.size = left.size - i;
+			left.str = ft_join(NULL, left.str, i, left.size);
 			return (result);
 		}
 		else
 		{
-			result = ft_join(NULL, temp_left, 0, read_size);
-			free(temp_left);
-			temp_left = NULL;
+			result = ft_join(NULL, left.str, 0, left.size);
+			left.str = NULL;
 		}
 	}
 	temp_read = (char *) malloc(BUFFER_SIZE + 1);
@@ -54,7 +50,8 @@ char	*get_next_line(int fd)
 		if (i < read_size)
 		{
 			result = ft_join(result, temp_read, 0, i);
-			temp_left = ft_join(NULL, temp_read, i, read_size - i);
+			left.size = read_size - i;
+			left.str = ft_join(NULL, temp_read, i, left.size);
 			break ;
 		}
 		else

@@ -17,6 +17,13 @@
 # include <unistd.h>
 # include <limits.h>
 
+typedef struct s_left
+{
+	char	*str;
+	int		size;
+}	t_left;
+
+
 char	*get_next_line(int fd);
 void	*ft_memmove(void *dst, const void *src, int len);
 int		ft_strlen(const char *s);
