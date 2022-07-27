@@ -12,11 +12,10 @@
 
 #include "get_next_line.h"
 
-char	*ft_str_return(t_str *result, char *buff)
+char	*ft_str_return(t_str *result)
 {
 	char	*dst;
 
-	free(buff);
 	if (!result->str)
 		return (NULL);
 	dst = (char *) malloc(sizeof(char) * (result->size + 1));
@@ -49,19 +48,20 @@ char	*ft_str_move(char *dst, char *src, int len)
 	return (dst);
 }
 
-
-void	ft_result_join(t_str *result, char *str, int str_len)
+char	*ft_result_join(t_str *s, char *str, int str_len)
 {
 	char	*dst;
 
-
-	dst = (char *) malloc(sizeof(char) * (result->size + str_len));
+	dst = (char *) malloc(sizeof(char) * (s->size + str_len));
 	if (!dst)
-		return ;
-	ft_str_move(dst, result->str, result->size);
-	ft_str_move(dst + result->size, str, str_len);
-	free(result->str);
-	result->str = dst;
-	result->size += str_len;
-	return ;
+	{
+		free(s->str);
+		return (NULL);
+	}
+	ft_str_move(dst, s->str, s->size);
+	ft_str_move(dst + s->size, str, str_len);
+	free(s->str);
+	s->str = dst;
+	s->size += str_len;
+	return (dst);
 }
