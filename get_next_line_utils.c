@@ -23,6 +23,7 @@ char	*ft_str_return(t_str *result, char *buff)
 	if (!dst)
 		return (NULL);
 	ft_str_move(dst, result->str, result->size);
+	*(dst + result->size) = '\0';
 	free(result->str);
 	result->str = NULL;
 	result->size = 0;
