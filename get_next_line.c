@@ -17,14 +17,14 @@ char	*ft_is_nl_in_left(t_str *left, int i)
 	char	*temp_left;
 	char	*result;
 
-	left->size = left->size - i;
+	left->size = left->size - i - 1;
 	temp_left = (char *) malloc(sizeof(char) * (left->size));
 	result = (char *) malloc(sizeof(char) * (i + 1));
 	if (!temp_left || !result)
 		return (NULL);
 	ft_str_move(result, left->str, i);
 	*(result + i) = '\0';
-	ft_str_move(temp_left, left->str, left->size);
+	ft_str_move(temp_left, left->str + i + 1, left->size);
 	free(left->str);
 	left->str = temp_left;
 	return (result);
@@ -68,17 +68,19 @@ char	*get_next_line(int fd)
 		while (++i < read_size && *(buff + i) != '\n');
 		if (i < read_size)
 		{
-			ft_result_join(&result, buff, i);
-			left.size = read_size - i;
-			left.str = malloc(sizeof(char) * left.size);
-			if (!left.str)
-				return (NULL);
-			ft_str_move(left.str, buff, left.size);
+			ft_result_join(&result, buff, i + 1);
+			left.size = read_size - i - 1;
+			if (left.size > 0)
+			{
+				left.str = malloc(sizeof(char) * left.size);
+				if (!left.str)
+					return (ft_str_return(&result, buff));
+				ft_str_move(left.str, buff + i + 1, left.size);
+			}
 			break ;
 		}
 		else
 			ft_result_join(&result, buff, read_size);
 	}
-	free(buff);
-	return (ft_str_return(&result));
+	return (ft_str_return(&result, buff));
 }
