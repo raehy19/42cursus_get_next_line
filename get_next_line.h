@@ -17,12 +17,15 @@
 # include <unistd.h>
 # include <limits.h>
 
-typedef struct s_str
+typedef struct s_data
 {
 	char	*str;
 	ssize_t	size;
-}	t_str;
+}	t_data;
 
 
+char	*get_next_line(int fd);
+char	*ft_str_move(char *dst, char *src, int len);
+char	*ft_data_join(t_data *data, char *str, ssize_t len);
 
 #endif

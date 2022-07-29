@@ -12,42 +12,58 @@
 
 #include "get_next_line.h"
 
-ssize_t	ft_left_check(t_str *left, char *buff, int fd)
+void	ft_left_check(t_data *left, t_data *buff, int fd)
 {
-	ssize_t	buff_size;
-
 	if (left->size > 0)
 	{
-		buff = left->str;
-		buff_size = left->size;
+		buff->str = left->str;
+		buff->size = left->size;
 		left->str = NULL;
 		left->size = 0;
 	}
 	else
-		buff_size = read(fd, buff, BUFFER_SIZE);
-	return (buff_size);
+		buff->size = read(fd, buff->str, BUFFER_SIZE);
+	return ;
 }
 
-void	ft_find_nl(char *buff, t_str *result, t_str *left, )
+int	ft_find_nl(t_data *buff, t_data *result, t_data *left)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (i < buff->size && *(buff->str + i) != '\n')
+		++i;
+	if (i < buff->size)
+	{
+		ft_data_join(result, buff->str, i + 1);
+		ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
+		return (1);
+	}
+	else
+		ft_data_join(result, buff->str, buff->size);
+	return (0);
+}
 
 char	*get_next_line(int fd)
 {
-	static t_str	left;
-	t_str			result;
-	char			*buff;
-	ssize_t			buff_size;
+	static t_data	left;
+	t_data			result;
+	t_data 			buff;
 
 	if (fd < 0 || fd > OPEN_MAX)
 		return (NULL);
-	result = (t_str){NULL, 0};
-	buff = (char *) malloc(sizeof(char) * BUFFER_SIZE);
-	if (!buff)
+	result = (t_data){NULL, 0};
+	buff.str = (char *) malloc(sizeof(char) * BUFFER_SIZE);
+	if (!buff.str)
 		return (NULL);
-	buff_size = ft_left_check(&left, buff, fd);
-	while (buff_size > 0)
+	ft_left_check(&left, &buff, fd);
+	while (buff.size > 0)
 	{
-
-		buff_size = read(fd, buff, BUFFER_SIZE);
+		if (ft_find_nl(&buff, &result, &left))
+			break ;
+		buff.size = read(fd, buff.str, BUFFER_SIZE);
 	}
+	free(buff.str);
+	return (result.str);
 }
 
