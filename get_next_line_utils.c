@@ -12,9 +12,9 @@
 
 #include "get_next_line.h"
 
-char	*ft_str_move(char *dst, char *src, int len)
+char	*ft_str_move(char *dst, char *src, ssize_t len)
 {
-	int		i;
+	ssize_t	i;
 
 	if (dst > src)
 	{
@@ -31,25 +31,27 @@ char	*ft_str_move(char *dst, char *src, int len)
 	return (dst);
 }
 
-char	*ft_data_join(t_data *data, char *str, ssize_t len)
+char	*ft_data_join(t_data *data, char *src, ssize_t len)
 {
 	char	*temp;
 
+	if (len == 0)
+		return (NULL);
 	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
 	if (!temp)
 	{
-		free(data->str);
-		data->str = NULL;
+//		if (data->str)
+//			free(data->str);
+//		data->str = NULL;
 		return (NULL);
 	}
 	if (data->size > 0)
 		ft_str_move(temp, data->str, data->size);
 	if (len > 0)
-		ft_str_move(temp + data->size, str, len);
+		ft_str_move(temp + data->size, src, len);
 	*(temp + data->size + len) = '\0';
 	if (data->str)
 		free(data->str);
-	data->str = temp;
 	data->size += len;
-	return (data->str);
+	return (temp);
 }

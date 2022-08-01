@@ -14,19 +14,19 @@
 
 void	ft_left_check(t_data *left, t_data *buff, int fd)
 {
-	if (left->size > 0)
+	if (left->str && left->size > 0)
 	{
 		buff->str = left->str;
 		buff->size = left->size;
-		left->str = NULL;
-		left->size = 0;
 	}
 	else
 		buff->size = read(fd, buff->str, BUFFER_SIZE);
+	left->str = NULL;
+	left->size = 0;
 	return ;
 }
 
-int	ft_find_nl(t_data *buff, t_data *result, t_data *left)
+int	ft_check_buff(t_data *buff, t_data *result, t_data *left)
 {
 	ssize_t	i;
 
@@ -35,12 +35,12 @@ int	ft_find_nl(t_data *buff, t_data *result, t_data *left)
 		++i;
 	if (i < buff->size)
 	{
-		ft_data_join(result, buff->str, i + 1);
-		ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
+		result->str = ft_data_join(result, buff->str, i + 1);
+		left->str = ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
 		return (1);
 	}
 	else
-		ft_data_join(result, buff->str, buff->size);
+		result->str = ft_data_join(result, buff->str, buff->size);
 	return (0);
 }
 
@@ -59,7 +59,7 @@ char	*get_next_line(int fd)
 	ft_left_check(&left, &buff, fd);
 	while (buff.size > 0)
 	{
-		if (ft_find_nl(&buff, &result, &left))
+		if (ft_check_buff(&buff, &result, &left))
 			break ;
 		buff.size = read(fd, buff.str, BUFFER_SIZE);
 	}
