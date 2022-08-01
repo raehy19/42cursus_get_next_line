@@ -31,19 +31,19 @@ char	*ft_str_move(char *dst, char *src, ssize_t len)
 	return (dst);
 }
 
-char	*ft_data_join(t_data *data, char *src, ssize_t len)
+int	ft_data_join(t_data *data, char *src, ssize_t len)
 {
 	char	*temp;
 
 	if (len == 0)
-		return (NULL);
+		return (0);
 	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
 	if (!temp)
 	{
 //		if (data->str)
 //			free(data->str);
 //		data->str = NULL;
-		return (NULL);
+		return (-1);
 	}
 	if (data->size > 0)
 		ft_str_move(temp, data->str, data->size);
@@ -52,6 +52,7 @@ char	*ft_data_join(t_data *data, char *src, ssize_t len)
 	*(temp + data->size + len) = '\0';
 	if (data->str)
 		free(data->str);
+	data->str = temp;
 	data->size += len;
-	return (temp);
+	return (0);
 }

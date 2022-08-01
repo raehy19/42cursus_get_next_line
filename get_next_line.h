@@ -26,5 +26,6 @@ typedef struct s_data
 
 char	*get_next_line(int fd);
 char	*ft_str_move(char *dst, char *src, ssize_t len);
-char	*ft_data_join(t_data *data, char *src, ssize_t len);
+int	ft_data_join(t_data *data, char *src, ssize_t len);
+
 #endif

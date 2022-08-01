@@ -35,12 +35,12 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *left)
 		++i;
 	if (i < buff->size)
 	{
-		result->str = ft_data_join(result, buff->str, i + 1);
-		left->str = ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
+		ft_data_join(result, buff->str, i + 1);
+		ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
 		return (1);
 	}
 	else
-		result->str = ft_data_join(result, buff->str, buff->size);
+		ft_data_join(result, buff->str, buff->size);
 	return (0);
 }
 
