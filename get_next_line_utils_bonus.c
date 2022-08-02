@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-char	*ft_str_move(char *dst, char *src, int len)
+void	ft_str_move(char *dst, char *src, ssize_t len)
 {
-	int		i;
+	ssize_t	i;
 
 	if (dst > src)
 	{
@@ -28,40 +28,34 @@ char	*ft_str_move(char *dst, char *src, int len)
 		while (++i < len)
 			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
 	}
-	return (dst);
+	return ;
 }
 
-char	*ft_result_join(t_str *s, char *str, int str_len)
+int	ft_data_join(t_data *data, char *src, ssize_t len)
 {
-	char	*dst;
+	char	*temp;
 
-	dst = (char *) malloc(sizeof(char) * (s->size + str_len));
-	if (!dst)
+	if (len == 0)
+		return (0);
+	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
+	if (!temp)
 	{
-		free(s->str);
-		return (NULL);
+		if (data->size > 0)
+		{
+			free(data->str);
+			data->str = NULL;
+			data->size = 0;
+		}
+		return (-1);
 	}
-	ft_str_move(dst, s->str, s->size);
-	ft_str_move(dst + s->size, str, str_len);
-	free(s->str);
-	s->str = dst;
-	s->size += str_len;
-	return (dst);
-}
-
-char	*ft_str_return(t_str *result)
-{
-	char	*dst;
-
-	if (!result->str)
-		return (NULL);
-	dst = (char *) malloc(sizeof(char) * (result->size + 1));
-	if (!dst)
-		return (NULL);
-	ft_str_move(dst, result->str, result->size);
-	*(dst + result->size) = '\0';
-	free(result->str);
-	result->str = NULL;
-	result->size = 0;
-	return (dst);
+	if (data->size > 0)
+		ft_str_move(temp, data->str, data->size);
+	if (len > 0)
+		ft_str_move((temp + (data->size)), src, len);
+	*(temp + data->size + len) = '\0';
+	if (data->str)
+		free(data->str);
+	data->str = temp;
+	data->size += len;
+	return (0);
 }
