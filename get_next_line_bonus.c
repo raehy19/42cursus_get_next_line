@@ -36,11 +36,15 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *remain)
 		++i;
 	if (i < buff->size)
 	{
-		buff->size = buff->size - i - 1;
-		if (ft_data_join(remain, buff->str + i + 1, buff->size))
-			return (-1);
 		if (ft_data_join(result, buff->str, i + 1))
 			return (-1);
+		if (ft_data_join(remain, buff->str + i + 1, buff->size - i - 1))
+		{
+			if (result->str)
+				free(result->str);
+			result->str = NULL;
+			return (-1);
+		}
 		return (1);
 	}
 	else
