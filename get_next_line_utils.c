@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*ft_str_move(char *dst, char *src, ssize_t len)
+void	ft_str_move(char *dst, char *src, ssize_t len)
 {
 	ssize_t	i;
 
@@ -28,7 +28,7 @@ char	*ft_str_move(char *dst, char *src, ssize_t len)
 		while (++i < len)
 			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
 	}
-	return (dst);
+	return ;
 }
 
 int	ft_data_join(t_data *data, char *src, ssize_t len)
@@ -40,15 +40,15 @@ int	ft_data_join(t_data *data, char *src, ssize_t len)
 	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
 	if (!temp)
 	{
-//		if (data->str)
-//			free(data->str);
-//		data->str = NULL;
+		if (data->str)
+			free(data->str);
+		data->str = NULL;
 		return (-1);
 	}
 	if (data->size > 0)
 		ft_str_move(temp, data->str, data->size);
 	if (len > 0)
-		ft_str_move(temp + data->size, src, len);
+		ft_str_move((temp + (data->size)), src, len);
 	*(temp + data->size + len) = '\0';
 	if (data->str)
 		free(data->str);

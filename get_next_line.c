@@ -12,21 +12,22 @@
 
 #include "get_next_line.h"
 
-void	ft_left_check(t_data *left, t_data *buff, int fd)
+void	ft_check_remain(t_data *remain, t_data *buff, int fd)
 {
-	if (left->str && left->size > 0)
+	if (remain->size > 0)
 	{
-		buff->str = left->str;
-		buff->size = left->size;
+		ft_str_move(buff->str, remain->str, remain->size);
+		buff->size = remain->size;
+		free(remain->str);
+		remain->str = NULL;
+		remain->size = 0;
 	}
 	else
 		buff->size = read(fd, buff->str, BUFFER_SIZE);
-	left->str = NULL;
-	left->size = 0;
 	return ;
 }
 
-int	ft_check_buff(t_data *buff, t_data *result, t_data *left)
+int	ft_check_buff(t_data *buff, t_data *result, t_data *remain)
 {
 	ssize_t	i;
 
@@ -35,8 +36,10 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *left)
 		++i;
 	if (i < buff->size)
 	{
+		buff->size = buff->size - i - 1;
+		if (ft_data_join(remain, buff->str + i + 1, buff->size))
+			return (-1);
 		ft_data_join(result, buff->str, i + 1);
-		ft_data_join(left, buff->str + i + 1, buff->size - i - 1);
 		return (1);
 	}
 	else
@@ -46,24 +49,23 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *left)
 
 char	*get_next_line(int fd)
 {
-	static t_data	left;
+	static t_data	remain;
 	t_data			result;
-	t_data 			buff;
+	t_data			buff;
 
 	if (fd < 0 || fd > OPEN_MAX)
 		return (NULL);
 	result = (t_data){NULL, 0};
-	buff.str = (char *) malloc(sizeof(char) * BUFFER_SIZE);
+	buff.str = malloc(sizeof(char) * (BUFFER_SIZE));
 	if (!buff.str)
 		return (NULL);
-	ft_left_check(&left, &buff, fd);
+	ft_check_remain(&remain, &buff, fd);
 	while (buff.size > 0)
 	{
-		if (ft_check_buff(&buff, &result, &left))
+		if (ft_check_buff(&buff, &result, &remain))
 			break ;
 		buff.size = read(fd, buff.str, BUFFER_SIZE);
 	}
 	free(buff.str);
 	return (result.str);
 }
-
