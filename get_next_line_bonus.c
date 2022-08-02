@@ -51,7 +51,7 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *remain)
 
 char	*get_next_line(int fd)
 {
-	static t_data	remain;
+	static t_data	remain[OPEN_MAX + 1];
 	t_data			result;
 	t_data			buff;
 
@@ -61,10 +61,10 @@ char	*get_next_line(int fd)
 	buff.str = malloc(sizeof(char) * (BUFFER_SIZE));
 	if (!buff.str)
 		return (NULL);
-	ft_check_remain(&remain, &buff, fd);
+	ft_check_remain(&remain[fd], &buff, fd);
 	while (buff.size > 0)
 	{
-		if (ft_check_buff(&buff, &result, &remain))
+		if (ft_check_buff(&buff, &result, &remain[fd]))
 			break ;
 		buff.size = read(fd, buff.str, BUFFER_SIZE);
 	}
