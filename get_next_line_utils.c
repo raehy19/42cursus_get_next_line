@@ -40,9 +40,12 @@ int	ft_data_join(t_data *data, char *src, ssize_t len)
 	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
 	if (!temp)
 	{
-		if (data->str)
+		if (data->size > 0)
+		{
 			free(data->str);
-		data->str = NULL;
+			data->str = NULL;
+			data->size = 0;
+		}
 		return (-1);
 	}
 	if (data->size > 0)
