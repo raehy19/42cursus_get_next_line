@@ -39,15 +39,7 @@ int	ft_data_join(t_data *data, char *src, ssize_t len)
 		return (0);
 	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
 	if (!temp)
-	{
-		if (data->size > 0)
-		{
-			free(data->str);
-			data->str = NULL;
-			data->size = 0;
-		}
 		return (-1);
-	}
 	if (data->size > 0)
 		ft_str_move(temp, data->str, data->size);
 	if (len > 0)

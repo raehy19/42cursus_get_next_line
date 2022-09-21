@@ -36,8 +36,7 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *remain)
 		++i;
 	if (i < buff->size)
 	{
-		buff->size = buff->size - i - 1;
-		if (ft_data_join(remain, buff->str + i + 1, buff->size))
+		if (ft_data_join(remain, buff->str + i + 1, buff->size - i - 1))
 			return (-1);
 		if (ft_data_join(result, buff->str, i + 1))
 			return (-1);
@@ -49,23 +48,38 @@ int	ft_check_buff(t_data *buff, t_data *result, t_data *remain)
 	return (0);
 }
 
+char	*ft_error_return(t_data remain, t_data result, t_data buff)
+{
+	if (remain.str)
+		free(remain.str);
+	if (result.str)
+		free(result.str);
+	if (buff.str)
+		free(buff.str);
+	return (NULL);
+}
+
 char	*get_next_line(int fd)
 {
 	static t_data	remain;
 	t_data			result;
 	t_data			buff;
+	int				flag;
 
 	if (fd < 0 || fd > OPEN_MAX)
 		return (NULL);
 	result = (t_data){NULL, 0};
 	buff.str = malloc(sizeof(char) * (BUFFER_SIZE));
 	if (!buff.str)
-		return (NULL);
+		return (ft_error_return(remain, result, buff));
 	ft_check_remain(&remain, &buff, fd);
 	while (buff.size > 0)
 	{
-		if (ft_check_buff(&buff, &result, &remain))
+		flag = ft_check_buff(&buff, &result, &remain);
+		if (flag > 0)
 			break ;
+		else if (flag < 0)
+			return (ft_error_return(remain, result, buff));
 		buff.size = read(fd, buff.str, BUFFER_SIZE);
 	}
 	free(buff.str);
