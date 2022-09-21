@@ -1,16 +1,69 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   gnl_one_file.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rjeong <rjeong@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: rjeong <rjeong@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/19 17:17:36 by rjeong            #+#    #+#             */
-/*   Updated: 2022/07/27 21:50:33 by rjeong           ###   ########.fr       */
+/*   Created: 2022/09/21 17:13:49 by rjeong            #+#    #+#             */
+/*   Updated: 2022/09/21 17:13:53 by rjeong           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
+
+typedef struct s_data
+{
+	char	*str;
+	ssize_t	size;
+}	t_data;
+
+void	ft_str_move(char *dst, char *src, ssize_t len);
+int		ft_data_join(t_data *data, char *src, ssize_t len);
+void	ft_check_remain(t_data *remain, t_data *buff, int fd);
+int		ft_check_buff(t_data *buff, t_data *result, t_data *remain);
+char	*get_next_line(int fd);
+
+void	ft_str_move(char *dst, char *src, ssize_t len)
+{
+	ssize_t	i;
+
+	if (dst > src)
+	{
+		i = len;
+		while (--i > -1)
+			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
+	}
+	else
+	{
+		i = -1;
+		while (++i < len)
+			*(((unsigned char *) dst) + i) = *(((unsigned char *) src) + i);
+	}
+	return ;
+}
+
+int	ft_data_join(t_data *data, char *src, ssize_t len)
+{
+	char	*temp;
+
+	if (len == 0)
+		return (0);
+	temp = (char *) malloc(sizeof(char) * (data->size + len + 1));
+	if (!temp)
+		return (-1);
+	if (data->size > 0)
+		ft_str_move(temp, data->str, data->size);
+	if (len > 0)
+		ft_str_move((temp + (data->size)), src, len);
+	*(temp + data->size + len) = '\0';
+	if (data->str)
+		free(data->str);
+	data->str = temp;
+	data->size += len;
+	return (0);
+}
 
 void	ft_check_remain(t_data *remain, t_data *buff, int fd)
 {
